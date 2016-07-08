@@ -20,7 +20,6 @@ using Protocol = HTTPServer::Protocol;
 
 DEFINE_int32(http_port, 11000, "Port to listen on with HTTP protocol");
 
-
 class MyHandler : public RequestHandler {
 public:
     MyHandler() : m_body(new folly::IOBuf(folly::IOBuf::CopyBufferOp::COPY_BUFFER, s_defaultBody.data(), s_defaultBody.size())) {
@@ -39,7 +38,6 @@ public:
         cout << __PRETTY_FUNCTION__ << endl;
     }
 
-
     void onEOM() noexcept override
     {
         cout << __PRETTY_FUNCTION__ << endl;
@@ -51,12 +49,10 @@ public:
             .sendWithEOM();
     }
 
-
     void onUpgrade(proxygen::UpgradeProtocol proto) noexcept override
     {
         cout << __PRETTY_FUNCTION__ << endl;
     }
-
 
     void requestComplete() noexcept override
     {
@@ -71,7 +67,6 @@ public:
 protected:
     unique_ptr<folly::IOBuf> m_body;
     static string s_defaultBody;
-
 };
 
 string MyHandler::s_defaultBody("It works!\n");
@@ -105,11 +100,9 @@ int main(int argc, char *argv[])
 
     HTTPServerOptions options;
 
-
     options.handlerFactories = RequestHandlerChain()
         .addThen<MyHandlerFactory>()
         .build();
-
 
     HTTPServer server(std::move(options));
 
