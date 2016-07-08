@@ -78,9 +78,6 @@ public:
         cout << __PRETTY_FUNCTION__ << endl;
     }
 
-    void foo() {
-    }
-
     void sendTail() {
         ResponseBuilder(downstream_)
             .body(move(m_body1))
@@ -100,9 +97,7 @@ string MyHandler::s_defaultBody1("It really works!\n");
 
 class MyHandlerFactory : public RequestHandlerFactory {
 public:
-    void onServerStart(folly::EventBase* evb) noexcept override {
-        m_evb = evb;
-    }
+    void onServerStart(folly::EventBase* evb) noexcept override : m_evb(evb) { }
 
     void onServerStop() noexcept override {
     }
@@ -112,7 +107,9 @@ public:
     }
 
 private:
-    folly::EventBase *m_evb = nullptr;
+    folly::EventBase *m_evb;
+
+    HHWheelTimer
 
 };
 
