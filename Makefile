@@ -1,5 +1,5 @@
 
-PROGRAMS=EchoServer MyFirstServer MySecondServer MyThirdServer
+PROGRAMS=EchoServer MyFirstServer MySecondServer MyThirdServer SimpleReverseProxy
 
 all: ${PROGRAMS}
 
@@ -10,6 +10,7 @@ EchoServer.SRCS=EchoServer.cc EchoHandler.cc
 MyFirstServer.SRCS=MyFirstServer.cc
 MySecondServer.SRCS=MySecondServer.cc
 MyThirdServer.SRCS=MyThirdServer.cc
+SimpleReverseProxy.SRCS=SimpleReverseProxy.cc ReverseProxyHandler.cc ReverseProxyHandlerFactory.cc
 
 
 .SECONDEXPANSION:
