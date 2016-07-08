@@ -97,7 +97,9 @@ string MyHandler::s_defaultBody1("It really works!\n");
 
 class MyHandlerFactory : public RequestHandlerFactory {
 public:
-    void onServerStart(folly::EventBase* evb) noexcept override : m_evb(evb) { }
+    void onServerStart(folly::EventBase* evb) noexcept override {
+        m_evb = evb;
+    }
 
     void onServerStop() noexcept override {
     }
@@ -107,10 +109,7 @@ public:
     }
 
 private:
-    folly::EventBase *m_evb;
-
-    HHWheelTimer
-
+    folly::EventBase *m_evb = nullptr;
 };
 
 int main(int argc, char *argv[])
