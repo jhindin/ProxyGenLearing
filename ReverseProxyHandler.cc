@@ -17,6 +17,8 @@ ReverseProxyHandler::ReverseProxyHandler(ReverseProxyHandlerFactory *factory) :
 
 void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexcept
 {
+    cout << __PRETTY_FUNCTION__ << endl;
+
     HTTPHeaders &headers = message->getHeaders();
 
     if (!headers.exists(HTTP_HEADER_HOST)) {
@@ -26,8 +28,6 @@ void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexce
             .body(move(m_body400))
             .sendWithEOM();
     }
-
-    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::onBody(std::unique_ptr<folly::IOBuf> body) noexcept
