@@ -10,7 +10,7 @@ class ReverseProxyHandler : public proxygen::RequestHandler {
 public:
     ReverseProxyHandler(ReverseProxyHandlerFactory *factory);
 
-    void onRequest(std::unique_ptr<proxygen::HTTPMessage> headers) noexcept override;
+    void onRequest(std::unique_ptr<proxygen::HTTPMessage> message) noexcept override;
     void onBody(std::unique_ptr<folly::IOBuf> body) noexcept override;
     void onEOM() noexcept override;
     void onUpgrade(proxygen::UpgradeProtocol proto) noexcept override;
@@ -19,4 +19,7 @@ public:
 
 protected:
     ReverseProxyHandlerFactory *m_factory;
+
+    std::unique_ptr<folly::IOBuf> m_body400;
+    static std::string s_body400string;
 };
