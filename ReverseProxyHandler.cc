@@ -6,7 +6,7 @@
 using namespace std;
 using namespace proxygen;
 
-string ReverseProxyHandler::s_body400string("No Host header");
+string ReverseProxyHandler::s_body400string("No Host header\n");
 
 ReverseProxyHandler::ReverseProxyHandler(ReverseProxyHandlerFactory *factory) :
     m_factory(factory),
