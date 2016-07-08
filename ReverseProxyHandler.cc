@@ -1,6 +1,7 @@
 #include <proxygen/lib/http/HTTPHeaders.h>
 
 #include "ReverseProxyHandler.h"
+#include "ReverseProxyHandlerFactory.h"
 #include <iostream>
 
 using namespace std;
@@ -10,6 +11,7 @@ string ReverseProxyHandler::s_body400string("No Host header\n");
 
 ReverseProxyHandler::ReverseProxyHandler(ReverseProxyHandlerFactory *factory) :
     m_factory(factory),
+    m_httpConnector(this, factory->wheelTimer()),
     m_body400(new folly::IOBuf(folly::IOBuf::CopyBufferOp::COPY_BUFFER, s_body400string.data(), s_body400string.size()))
 {
     cout << __PRETTY_FUNCTION__ << endl;
@@ -51,6 +53,18 @@ void ReverseProxyHandler::requestComplete() noexcept
 }
 
 void ReverseProxyHandler::onError(ProxygenError err) noexcept
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+}
+
+
+// HTTPConnector::Callback methods
+void ReverseProxyHandler::connectSuccess(HTTPUpstreamSession* session) noexcept
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+}
+
+void ReverseProxyHandler::connectError(const folly::AsyncSocketException& ex) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
 }

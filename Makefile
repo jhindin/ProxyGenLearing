@@ -3,8 +3,8 @@ PROGRAMS=EchoServer MyFirstServer MySecondServer MyThirdServer SimpleReverseProx
 
 all: ${PROGRAMS}
 
-CXXFLAGS=-std=c++11 -g
-LDLIBS=-lproxygenhttpserver -lfolly -lglog -lgflags -pthread
+CXXFLAGS=-std=c++11 -g -Wall
+LDLIBS=-lproxygenhttpserver -lproxygencurl -lfolly -lglog -lgflags -pthread
 
 EchoServer.SRCS=EchoServer.cc EchoHandler.cc
 MyFirstServer.SRCS=MyFirstServer.cc
