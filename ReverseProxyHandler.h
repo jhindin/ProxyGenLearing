@@ -49,6 +49,7 @@ protected:
     static std::string s_body400string;
 
     proxygen::HTTPTransaction* m_upstreamTransaction = nullptr;
+    std::unique_ptr<proxygen::HTTPMessage> m_message;
 
     class UpstreamTransactionHandler :  public proxygen::HTTPTransactionHandler {
     public:

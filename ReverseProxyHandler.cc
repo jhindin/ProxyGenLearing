@@ -25,7 +25,9 @@ void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexce
 {
     cout << __PRETTY_FUNCTION__ << endl;
 
-    HTTPHeaders &headers = message->getHeaders();
+    m_message = std::move(message);
+
+    HTTPHeaders &headers = m_message->getHeaders();
 
     if (headers.getNumberOfValues(HTTP_HEADER_HOST) != 1) {
         ResponseBuilder(downstream_)
