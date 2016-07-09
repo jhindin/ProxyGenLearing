@@ -90,65 +90,65 @@ void ReverseProxyHandler::connectError(const folly::AsyncSocketException& ex) no
 // HTTPTransactionHandler methods
 void ReverseProxyHandler::upstreamSetTransaction(HTTPTransaction* txn) noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamDetachTransaction() noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnHeadersComplete(std::unique_ptr<HTTPMessage> msg)
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnBody(std::unique_ptr<folly::IOBuf> chain) noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnChunkHeader(size_t length) noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnChunkComplete() noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnTrailers(std::unique_ptr<HTTPHeaders> trailers) noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnEOM() noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnUpgrade(UpgradeProtocol protocol) noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnError(const HTTPException& error) noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnEgressPaused() noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnEgressResumed() noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 void ReverseProxyHandler::upstreamOnPushedTransaction(HTTPTransaction* txn) noexcept
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
