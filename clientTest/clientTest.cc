@@ -28,7 +28,34 @@ int main(int argc, char *argv[])
     cout << "Hello, world!" << endl;
 }
 
+void usage(const char *prog)
+{
+    cerr << "Usage" << endl;
+}
+
 bool Args::parse(int argc, char * argv[])
 {
+    int c;
+    char *secondary = nullptr;
+
+    while ((c=getopt(argc, argv, "s:h")) != -1) {
+        switch (c) {
+        case 's':
+            secondary = optarg;
+            break;
+        case 'h':
+            usage(argv[0]);
+            return false;
+        case '?':
+            usage(argv[0]);
+            return false;
+        default:
+            cerr << "Unexpected getopt state " << static_cast<char>(c) << endl;
+            usage(argv[0]);
+            break;
+        }
+    }
+
+    cout << "Secondary set to " << (secondary == nullptr ? "nullptr" : secondary) << endl;
     return true;
 }
