@@ -7,14 +7,15 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
+#include <stdexcept>
 
 using namespace std;
 
 struct Args {
     bool parse(int  argc, char *argv[]);
 
-    const char *m_extDevice;
-    const char *m_host;
+    string m_extDevice;
+    string m_host;
     uint16_t m_port;
 };
 
@@ -45,13 +46,12 @@ void usage(const char *prog)
 bool Args::parse(int argc, char * argv[])
 {
     int c;
-    const char *secondary = nullptr;
-    const char *addrString = nullptr;
+    string addrString;
 
     while ((c=getopt(argc, argv, "s:h")) != -1) {
         switch (c) {
         case 's':
-            secondary = optarg;
+            m_extDevice = optarg;
             break;
         case 'h':
             usage(argv[0]);
@@ -81,6 +81,33 @@ bool Args::parse(int argc, char * argv[])
     }
 
     cout << "arg is " << addrString << endl;
+
+    string::size_type semicolonPos = addrString.find(':');
+    if (semicolonPos == string::npos) {
+        m_host = addrString;
+        m_port = 80;
+    } else {
+        m_host = addrString.substr(0, semicolonPos);
+
+        string portString = addrString.substr(semicolonPos + 1);
+
+        string::size_type portParseEnd;
+
+        try {
+            m_port = stoi(portString,  &portParseEnd);
+        } catch (invalid_argument &ex) {
+            cerr << "Invalid integer in port field of " << addrString << endl;
+            usage(argv[0]);
+            return -1;
+        }
+
+        if (portParseEnd != portString.size()) {
+            cerr << "Invalid integer in port field of " << addrString << endl;
+            usage(argv[0]);
+            return -1;
+        }
+    }
+
 
     return true;
 }
