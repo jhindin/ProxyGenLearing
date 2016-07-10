@@ -45,7 +45,8 @@ void usage(const char *prog)
 bool Args::parse(int argc, char * argv[])
 {
     int c;
-    char *secondary = nullptr;
+    const char *secondary = nullptr;
+    const char *addrString = nullptr;
 
     while ((c=getopt(argc, argv, "s:h")) != -1) {
         switch (c) {
@@ -65,6 +66,21 @@ bool Args::parse(int argc, char * argv[])
         }
     }
 
-    cout << "Secondary set to " << (secondary == nullptr ? "nullptr" : secondary) << endl;
+    switch (argc - optind) {
+    case 0:
+        cerr << "No args" << endl;
+        usage(argv[0]);
+        return false;
+    case 1:
+        addrString = argv[optind];
+        break;
+    default:
+        cerr << "Extra args" << endl;
+        usage(argv[0]);
+        return false;
+    }
+
+    cout << "arg is " << addrString << endl;
+
     return true;
 }
