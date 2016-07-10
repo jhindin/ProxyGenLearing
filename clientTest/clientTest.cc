@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -30,7 +31,15 @@ int main(int argc, char *argv[])
 
 void usage(const char *prog)
 {
-    cerr << "Usage" << endl;
+    string progString(prog);
+    string::size_type slashPos = progString.rfind('/');
+    if (slashPos != string::npos)
+        progString = progString.substr(slashPos + 1);
+
+    cerr << "Usage: " << progString << " [-s <secondary terminal>] {-h] <host>[:<port]" << endl;
+    cerr << "\t-s <secondary terminal> : opens secondary terminal to control the flow in the main one" << endl;
+    cerr << "\t-h : print this message and exit" << endl;
+    cerr << "\t<host>[:<port>] server address to connect, port 80 by default" << endl;
 }
 
 bool Args::parse(int argc, char * argv[])
