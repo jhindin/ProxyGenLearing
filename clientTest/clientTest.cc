@@ -108,6 +108,5 @@ bool Args::parse(int argc, char * argv[])
         }
     }
 
-
     return true;
 }
