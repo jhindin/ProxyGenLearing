@@ -158,6 +158,7 @@ void ReverseProxyHandler::upstreamOnTrailers(std::unique_ptr<HTTPHeaders> traile
 void ReverseProxyHandler::upstreamOnEOM() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    downstream_->sendEOM();
 }
 
 void ReverseProxyHandler::upstreamOnUpgrade(UpgradeProtocol protocol) noexcept
