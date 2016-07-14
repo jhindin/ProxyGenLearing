@@ -21,6 +21,8 @@ public:
     void onUpgrade(proxygen::UpgradeProtocol proto) noexcept override;
     void requestComplete() noexcept override;
     void onError(proxygen::ProxygenError err) noexcept override;
+    void onEgressPaused() noexcept override;
+    void onEgressResumed() noexcept override;
 
     // HTTPConnector::Callback methods
     void connectSuccess(proxygen::HTTPUpstreamSession* session) noexcept override;

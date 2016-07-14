@@ -21,6 +21,7 @@ ReverseProxyHandler::ReverseProxyHandler(ReverseProxyHandlerFactory *factory) :
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
+// RequestHandler methods
 void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
@@ -73,6 +74,16 @@ void ReverseProxyHandler::requestComplete() noexcept
 }
 
 void ReverseProxyHandler::onError(ProxygenError err) noexcept
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+}
+
+void ReverseProxyHandler::onEgressPaused() noexcept
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+}
+
+void ReverseProxyHandler::onEgressResumed() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
 }
