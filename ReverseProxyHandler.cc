@@ -113,11 +113,12 @@ void ReverseProxyHandler::upstreamSetTransaction(HTTPTransaction* txn) noexcept
 
     m_upstreamTransaction = txn;
 
+    m_upstreamTransaction->setIdleTimeout(chrono::milliseconds(60000));
+
     HTTPHeaderSize headersSize;
     HTTPMessage *message = m_message.get();
     m_upstreamTransaction->getTransport().sendHeaders(m_upstreamTransaction, *message,
                                                       &headersSize, false);
-
 }
 
 void ReverseProxyHandler::upstreamDetachTransaction() noexcept
@@ -128,21 +129,25 @@ void ReverseProxyHandler::upstreamDetachTransaction() noexcept
 void ReverseProxyHandler::upstreamOnHeadersComplete(std::unique_ptr<HTTPMessage> msg)
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    downstream_->sendHeaders(*(msg.get()));
 }
 
 void ReverseProxyHandler::upstreamOnBody(std::unique_ptr<folly::IOBuf> chain) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    downstream_->sendBody(std::move(chain));
 }
 
 void ReverseProxyHandler::upstreamOnChunkHeader(size_t length) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    downstream_->sendChunkHeader(length);
 }
 
 void ReverseProxyHandler::upstreamOnChunkComplete() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    downstream_->sendChunkTerminator();
 }
 
 void ReverseProxyHandler::upstreamOnTrailers(std::unique_ptr<HTTPHeaders> trailers) noexcept
@@ -163,6 +168,8 @@ void ReverseProxyHandler::upstreamOnUpgrade(UpgradeProtocol protocol) noexcept
 void ReverseProxyHandler::upstreamOnError(const HTTPException& error) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    cout << "  Direction: " << static_cast<int>(error.getDirection()) <<
+        ", message: "  << error.describe()  << endl;
 }
 
 void ReverseProxyHandler::upstreamOnEgressPaused() noexcept
