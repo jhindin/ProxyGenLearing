@@ -110,6 +110,14 @@ void ReverseProxyHandler::connectError(const folly::AsyncSocketException& ex) no
 void ReverseProxyHandler::upstreamSetTransaction(HTTPTransaction* txn) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+
+    m_upstreamTransaction = txn;
+
+    HTTPHeaderSize headersSize;
+    HTTPMessage *message = m_message.get();
+    m_upstreamTransaction->getTransport().sendHeaders(m_upstreamTransaction, *message,
+                                                      &headersSize, false);
+
 }
 
 void ReverseProxyHandler::upstreamDetachTransaction() noexcept
