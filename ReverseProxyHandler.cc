@@ -11,11 +11,13 @@ using namespace proxygen;
 using namespace folly;
 
 string ReverseProxyHandler::s_body400string("No Host header\n");
+string ReverseProxyHandler::s_body502string("Server doesn't response\n");
 
 ReverseProxyHandler::ReverseProxyHandler(ReverseProxyHandlerFactory *factory) :
     m_factory(factory),
     m_httpConnector(this, factory->wheelTimer()),
     m_body400(new folly::IOBuf(folly::IOBuf::CopyBufferOp::COPY_BUFFER, s_body400string.data(), s_body400string.size())),
+    m_body502(new folly::IOBuf(folly::IOBuf::CopyBufferOp::COPY_BUFFER, s_body502string.data(), s_body502string.size())),
     m_upstreamHandler(this)
 {
     cout << __PRETTY_FUNCTION__ << endl;
@@ -88,7 +90,6 @@ void ReverseProxyHandler::onEgressResumed() noexcept
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-
 // HTTPConnector::Callback methods
 void ReverseProxyHandler::connectSuccess(HTTPUpstreamSession* session) noexcept
 {
@@ -98,6 +99,11 @@ void ReverseProxyHandler::connectSuccess(HTTPUpstreamSession* session) noexcept
 void ReverseProxyHandler::connectError(const folly::AsyncSocketException& ex) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    ResponseBuilder(downstream_)
+        .status(502, "Bad gateway")
+        .header("Content-type", "text/plain")
+        .body(move(m_body502))
+        .sendWithEOM();
 }
 
 // HTTPTransactionHandler methods

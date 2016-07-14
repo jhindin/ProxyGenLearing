@@ -50,6 +50,9 @@ protected:
     std::unique_ptr<folly::IOBuf> m_body400;
     static std::string s_body400string;
 
+    std::unique_ptr<folly::IOBuf> m_body502;
+    static std::string s_body502string;
+
     proxygen::HTTPTransaction* m_upstreamTransaction = nullptr;
     std::unique_ptr<proxygen::HTTPMessage> m_message;
 
