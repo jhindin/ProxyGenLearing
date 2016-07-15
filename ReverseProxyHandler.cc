@@ -44,11 +44,15 @@ void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexce
 
     std::string host = headers.getSingleOrEmpty(HTTP_HEADER_HOST);
 
-    // TODO - parse host header value as <host>:<port>
     // TODO - implement configurable remapping
 
     try {
-        SocketAddress addr(host, 8895, true);
+        SocketAddress addr;
+
+        if (host.find(':') == string::npos)
+            addr.setFromHostPort(host, 8895);
+        else
+            addr.setFromHostPort(host);
 
         static const AsyncSocket::OptionMap opts{{{SOL_SOCKET, SO_REUSEADDR}, 1}};
 
