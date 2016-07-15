@@ -58,13 +58,21 @@ void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexce
 void ReverseProxyHandler::onBody(std::unique_ptr<folly::IOBuf> body) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
-    m_upstreamTransaction->getTransport().sendBody(m_upstreamTransaction, std::move(body), false);
+    if (m_upstreamTransaction)
+        m_upstreamTransaction->sendBody(std::move(body));
+    else
+        // TODO - collect body
+        ;
 }
 
 void ReverseProxyHandler::onEOM() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
-    m_upstreamTransaction->getTransport().sendEOM(m_upstreamTransaction);
+    if (m_upstreamTransaction)
+        m_upstreamTransaction->sendEOM();
+    else
+        // TODO- save state
+        ;
 }
 
 void ReverseProxyHandler::onUpgrade(UpgradeProtocol proto) noexcept
@@ -119,8 +127,7 @@ void ReverseProxyHandler::upstreamSetTransaction(HTTPTransaction* txn) noexcept
 
     HTTPHeaderSize headersSize;
     HTTPMessage *message = m_message.get();
-    m_upstreamTransaction->getTransport().sendHeaders(m_upstreamTransaction, *message,
-                                                      &headersSize, false);
+    m_upstreamTransaction->sendHeaders(*message);
 }
 
 void ReverseProxyHandler::upstreamDetachTransaction() noexcept
