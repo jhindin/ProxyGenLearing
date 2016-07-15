@@ -47,8 +47,11 @@ protected:
     ReverseProxyHandlerFactory *m_factory;
     proxygen::HTTPConnector m_httpConnector;
 
-    std::unique_ptr<folly::IOBuf> m_body400;
-    static std::string s_body400string;
+    std::unique_ptr<folly::IOBuf> m_body400NoHostHeader;
+    static std::string s_body400stringNoHostHeader;
+
+    std::unique_ptr<folly::IOBuf> m_body400BadHostHeader;
+    static std::string s_body400stringBadHostHeader;
 
     std::unique_ptr<folly::IOBuf> m_body502;
     static std::string s_body502string;

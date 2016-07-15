@@ -10,13 +10,15 @@ using namespace std;
 using namespace proxygen;
 using namespace folly;
 
-string ReverseProxyHandler::s_body400string("No Host header\n");
+string ReverseProxyHandler::s_body400stringNoHostHeader("No Host header\n");
+string ReverseProxyHandler::s_body400stringBadHostHeader("Bad Host header\n");
 string ReverseProxyHandler::s_body502string("Server doesn't response\n");
 
 ReverseProxyHandler::ReverseProxyHandler(ReverseProxyHandlerFactory *factory) :
     m_factory(factory),
     m_httpConnector(this, factory->wheelTimer()),
-    m_body400(new folly::IOBuf(folly::IOBuf::CopyBufferOp::COPY_BUFFER, s_body400string.data(), s_body400string.size())),
+    m_body400NoHostHeader(new folly::IOBuf(folly::IOBuf::CopyBufferOp::COPY_BUFFER, s_body400stringNoHostHeader.data(), s_body400stringNoHostHeader.size())),
+    m_body400BadHostHeader(new folly::IOBuf(folly::IOBuf::CopyBufferOp::COPY_BUFFER, s_body400stringBadHostHeader.data(), s_body400stringBadHostHeader.size())),
     m_body502(new folly::IOBuf(folly::IOBuf::CopyBufferOp::COPY_BUFFER, s_body502string.data(), s_body502string.size())),
     m_upstreamHandler(this)
 {
@@ -36,7 +38,7 @@ void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexce
         ResponseBuilder(downstream_)
             .status(400, "Bad request")
             .header("Content-type", "text/plain")
-            .body(move(m_body400))
+            .body(move(m_body400NoHostHeader))
             .sendWithEOM();
     }
 
@@ -44,15 +46,25 @@ void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexce
 
     // TODO - parse host header value as <host>:<port>
     // TODO - implement configurable remapping
-    SocketAddress addr(host, 8895, true);
 
-    static const AsyncSocket::OptionMap opts{{{SOL_SOCKET, SO_REUSEADDR}, 1}};
+    try {
+        SocketAddress addr(host, 8895, true);
 
-    m_httpConnector.connect
-        (m_factory->evb(),
-         addr,
-         std::chrono::milliseconds(1000),
-         opts);
+        static const AsyncSocket::OptionMap opts{{{SOL_SOCKET, SO_REUSEADDR}, 1}};
+
+        m_httpConnector.connect
+            (m_factory->evb(),
+             addr,
+             std::chrono::milliseconds(1000),
+             opts);
+    } catch (system_error &er) {
+        ResponseBuilder(downstream_)
+            .status(400, "Bad request")
+            .header("Content-type", "text/plain")
+            .body(move(m_body400BadHostHeader))
+            .sendWithEOM();
+        return;
+    }
 }
 
 void ReverseProxyHandler::onBody(std::unique_ptr<folly::IOBuf> body) noexcept
