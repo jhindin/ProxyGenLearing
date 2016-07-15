@@ -55,6 +55,8 @@ protected:
 
     proxygen::HTTPTransaction* m_upstreamTransaction = nullptr;
     std::unique_ptr<proxygen::HTTPMessage> m_message;
+    std::unique_ptr<folly::IOBuf> m_requestBody;
+    bool m_requestEOM = false;
 
     class UpstreamTransactionHandler :  public proxygen::HTTPTransactionHandler {
     public:
