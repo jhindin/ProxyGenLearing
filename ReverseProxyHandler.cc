@@ -44,7 +44,7 @@ void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexce
 
     std::string host = headers.getSingleOrEmpty(HTTP_HEADER_HOST);
 
-    // TODO - implement configurable remapping
+    // TODO - implement configurable remapping and host name resolution
 
     try {
         SocketAddress addr;
