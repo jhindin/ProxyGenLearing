@@ -83,6 +83,8 @@ void ReverseProxyHandler::onUpgrade(UpgradeProtocol proto) noexcept
 void ReverseProxyHandler::requestComplete() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    // TODO - make the instance delete itself only when both upstream and downstream
+    // transactions are closed
 }
 
 void ReverseProxyHandler::onError(ProxygenError err) noexcept
@@ -139,6 +141,8 @@ void ReverseProxyHandler::upstreamSetTransaction(HTTPTransaction* txn) noexcept
 void ReverseProxyHandler::upstreamDetachTransaction() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    // TODO - make the instance delete itself only when both upstream and downstream
+    // transactions are closed
 }
 
 void ReverseProxyHandler::upstreamOnHeadersComplete(std::unique_ptr<HTTPMessage> msg)
