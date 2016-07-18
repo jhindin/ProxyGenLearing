@@ -211,11 +211,13 @@ void ReverseProxyHandler::upstreamOnError(const HTTPException& error) noexcept
 void ReverseProxyHandler::upstreamOnEgressPaused() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    m_egressPaused = true;
 }
 
 void ReverseProxyHandler::upstreamOnEgressResumed() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+    m_egressPaused = false;
 }
 
 void ReverseProxyHandler::upstreamOnPushedTransaction(HTTPTransaction* txn) noexcept

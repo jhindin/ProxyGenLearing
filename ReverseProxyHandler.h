@@ -61,6 +61,8 @@ protected:
     std::unique_ptr<folly::IOBuf> m_requestBody;
     bool m_requestEOM = false;
 
+    bool m_egressPaused = false;
+
     class UpstreamTransactionHandler :  public proxygen::HTTPTransactionHandler {
     public:
         UpstreamTransactionHandler(ReverseProxyHandler *outerClass) : m_outerClass(outerClass) {}
