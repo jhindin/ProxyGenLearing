@@ -170,19 +170,32 @@ void ReverseProxyHandler::upstreamOnHeadersComplete(std::unique_ptr<HTTPMessage>
 void ReverseProxyHandler::upstreamOnBody(std::unique_ptr<folly::IOBuf> chain) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
-    downstream_->sendBody(std::move(chain));
+
+    if (!m_egressPaused) {
+        downstream_->sendBody(std::move(chain));
+    } else {
+        if (m_responseBody) {
+            m_responseBody->prependChain(std::move(chain));
+        } else {
+            m_responseBody = std::move(chain);
+        }
+    }
 }
 
 void ReverseProxyHandler::upstreamOnChunkHeader(size_t length) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
-    downstream_->sendChunkHeader(length);
+    if (!m_egressPaused) {
+        downstream_->sendChunkHeader(length);
+    }
 }
 
 void ReverseProxyHandler::upstreamOnChunkComplete() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
-    downstream_->sendChunkTerminator();
+    if (!m_egressPaused) {
+        downstream_->sendChunkTerminator();
+    }
 }
 
 void ReverseProxyHandler::upstreamOnTrailers(std::unique_ptr<HTTPHeaders> trailers) noexcept
@@ -193,7 +206,10 @@ void ReverseProxyHandler::upstreamOnTrailers(std::unique_ptr<HTTPHeaders> traile
 void ReverseProxyHandler::upstreamOnEOM() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
-    downstream_->sendEOM();
+    m_responseEOM = true;
+
+    if (!m_egressPaused)
+        downstream_->sendEOM();
 }
 
 void ReverseProxyHandler::upstreamOnUpgrade(UpgradeProtocol protocol) noexcept
@@ -212,12 +228,21 @@ void ReverseProxyHandler::upstreamOnEgressPaused() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
     m_egressPaused = true;
+    m_upstreamTransaction->pauseIngress();
 }
 
 void ReverseProxyHandler::upstreamOnEgressResumed() noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
     m_egressPaused = false;
+
+    if (m_responseBody) {
+        // TODO - send chunk header to downstream?
+        downstream_->sendBody(std::move(m_responseBody));
+    }
+
+    if (m_responseEOM)
+        downstream_->sendEOM();
 }
 
 void ReverseProxyHandler::upstreamOnPushedTransaction(HTTPTransaction* txn) noexcept
