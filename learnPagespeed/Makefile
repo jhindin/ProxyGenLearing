@@ -1,6 +1,6 @@
-PROGRAMS=first
+PROGRAMS=first second
 
-BUILDTYPE?=Release
+BUILDTYPE?=Debug
 
 os_name=unknown_os
 arch_name=ia32
@@ -45,6 +45,7 @@ LDLIBS=${PAGESPEED_LIB} `pkg-config --libs protobuf` -lpthread
 all: ${PROGRAMS}
 
 first.SRCS=first.cc
+second.SRCS=second.cc
 
 .SECONDEXPANSION:
 ${PROGRAMS}: % : $${$$@.SRCS}
