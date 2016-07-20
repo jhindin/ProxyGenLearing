@@ -115,6 +115,7 @@ void ArmeronRewriteOptions::Initialize() {
 
 void ArmeronRewriteOptions::Terminate() {
     RewriteOptions::Terminate();
+    Properties::Terminate(&s_armeronProperties);
 }
 
 net_instaweb::ServerContext *ArmeronRewriteDriverFactory::NewDecodingServerContext()
@@ -125,7 +126,7 @@ net_instaweb::ServerContext *ArmeronRewriteDriverFactory::NewDecodingServerConte
 net_instaweb::RewriteOptions *ArmeronRewriteDriverFactory::NewRewriteOptions()
 {
     ArmeronRewriteOptions *options = new ArmeronRewriteOptions(m_threadSystem);
-    options->Initialize();
+    //    options->Initialize();
     return options;
 }
 
@@ -163,11 +164,12 @@ int main(int argc, char **argv)
     net_instaweb::PosixTimer timer;
     NullCache nullCache;
     net_instaweb::UrlNamer urlNamer;
+    net_instaweb::UserAgentMatcher userAgentMatcher;
 
     serverContext.set_url_namer(&urlNamer);
     serverContext.set_timer(&timer);
     serverContext.set_metadata_cache(&nullCache);
-    serverContext.set_user_agent_matcher(new net_instaweb::UserAgentMatcher());
+    serverContext.set_user_agent_matcher(&userAgentMatcher);
 
     net_instaweb::Statistics *globalStatistics = new net_instaweb::NullStatistics();
     net_instaweb::RewriteStats::InitStats(globalStatistics);
@@ -177,7 +179,8 @@ int main(int argc, char **argv)
     serverContext.set_statistics(globalStatistics);
     serverContext.InitWorkers();
 
-    serverContext.set_rewrite_stats(new net_instaweb::RewriteStats(globalStatistics, threadSystem, &timer));
+    net_instaweb::RewriteStats rewriteStats(globalStatistics, threadSystem, &timer);
+    serverContext.set_rewrite_stats(&rewriteStats);
 
 
     net_instaweb::HttpOptions options;
@@ -232,7 +235,10 @@ int main(int argc, char **argv)
     rewriteDriver->ParseText(content, argStat.st_size);
     rewriteDriver->FinishParse();
 
+    delete []content;
+
     ArmeronRewriteOptions::Terminate();
+    delete globalStatistics;
 
     return 0;
 }
