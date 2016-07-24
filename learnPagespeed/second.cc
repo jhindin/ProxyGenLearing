@@ -34,12 +34,15 @@ using namespace std;
 
 class MyWriter : public net_instaweb::Writer {
 public:
-    bool Write(const StringPiece& str, net_instaweb::MessageHandler* handler) {
-        cout << str;
-        return true;
-    }
-    bool Flush(net_instaweb::MessageHandler* message_handler) { return true; }
-    bool Dump(net_instaweb::Writer* writer, net_instaweb::MessageHandler* message_handler) { return false; }
+  ~MyWriter() {
+    cout << endl << "EOF" << endl;;
+  }
+  bool Write(const StringPiece& str, net_instaweb::MessageHandler* handler) {
+    cout << str;
+    return true;
+  }
+  bool Flush(net_instaweb::MessageHandler* message_handler) { return true; }
+  bool Dump(net_instaweb::Writer* writer, net_instaweb::MessageHandler* message_handler) { return false; }
 };
 
 class ArmeronServerContext;
