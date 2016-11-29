@@ -1,0 +1,19 @@
+{
+  "name": "ws-sample",
+  "version": "1.0.0",
+  "description": "websocket sample",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jhindin/ProxyGenLearing.git"
+  },
+  "author": "Joseph Hindin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jhindin/ProxyGenLearing/issues"
+  },
+  "homepage": "https://github.com/jhindin/ProxyGenLearing#readme"
+}
