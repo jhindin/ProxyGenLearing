@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/jhindin/ProxyGenLearing/issues"
   },
-  "homepage": "https://github.com/jhindin/ProxyGenLearing#readme"
+  "homepage": "https://github.com/jhindin/ProxyGenLearing#readme",
+  "dependencies": {
+    "ws": "^1.1.1"
+  }
 }
