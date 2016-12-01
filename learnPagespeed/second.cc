@@ -193,8 +193,8 @@ int main(int argc, char **argv)
 
     net_instaweb::HtmlWriterFilter writerFilter(rewriteDriver);
 
-    MyWriter myWriter;
-    writerFilter.set_writer(&myWriter);
+    MyWriter *myWriter = new Mywriter();
+    writerFilter.set_writer(myWriter);
     rewriteDriver->AddFilter(&writerFilter);
 
     threadSystem->PermitThreadStarting();
