@@ -3,15 +3,28 @@
   <head>
     <title>Websocket example</title>
     <script>
-      console.log(window.location.host);
+      var echoUrl = "ws://" + window.location.host + "/echo";
+      var echoSocket;
       function establishConnection() {
-        var echoSocket = new WebSocket(window.location.origin + "/echo");
-        echoSocket.onopen(function(evt) {
-           echoSocket.
-
+        echoSocket = new WebSocket(echoUrl);
+        echoSocket.onopen = function(evt) {
+          exButton.disabled = false;
+        }
+        echoSocket.onmessage = function(evt) {
+           log.innerHTML += "<p>" + evt.data + "</p>";
+        }
+      }
+      window.onload = function() {
+        exButton.onclick = function() {
+          echoSocket.send(input.value);
+        }
+        establishConnection();
+      }
     </script>
   </head>
   <body>
     <h1>Websocket example</h1>
+    <input type="text" id="input" value="aaa"></input><button disabled="true" type="button" id="exButton">Exchange</button>
+    <span id="log"></span>
   </body>
 </html>
