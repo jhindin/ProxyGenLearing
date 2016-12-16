@@ -14,9 +14,9 @@ function optUnknown(a)
 }
 
 var help="<url>\n" +
-    "\topen websocket on given URL, by default http://localhost:80/echo";
+    "\topen websocket on given URL, by default http://localhost/echo";
 
-var url = "http://localhost:8895/echo";
+var url = "http://localhost/echo";
 
 parsedArgs = cliParser(process.argv.slice(2),
                        { boolean: ["h"], stopEarly: true,
@@ -34,8 +34,9 @@ if (parsedArgs._.length > 1) {
     process.exit(0);
 }
 
-if (process.argv.length == 1)
+if (parsedArgs._.length == 1) {
     url = parsedArgs._[0];
+}
 
 var ws = new WebSocket(url);
 
