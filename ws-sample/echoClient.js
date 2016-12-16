@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var WebSocket = require('ws');
+var cliParser = require('minimist');
 
 var url = "http://localhost:8895/echo";
 if (process.argv.length > 2)
@@ -16,6 +17,7 @@ ws.on('message', function(data, flags) {
     console.log("message arrived ", flags + ", data = ", data);
   // flags.binary will be set if a binary data is received.
   // flags.masked will be set if the data was masked.
+  ws.close();
 });
 
 console.log("Exiting");
