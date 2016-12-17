@@ -13,13 +13,17 @@ function optUnknown(a)
     return true;
 }
 
-var help="<url>\n" +
-    "\topen websocket on given URL, by default http://localhost/echo";
+var help="echoClient [-m <message>] [<url>]\n" +
+    "\t-m <message> message to send, by default 'test message'\n" +
+    "open websocket on given URL, by default http://localhost/echo";
 
 var url = "http://localhost/echo";
+var message = "test message";
 
 parsedArgs = cliParser(process.argv.slice(2),
-                       { boolean: ["h"], stopEarly: true,
+                       { string: ["m"],
+			 boolean: ["h"],
+			 stopEarly: true,
                          unknown: optUnknown });
 
 
@@ -27,6 +31,9 @@ if (parsedArgs.h || parsedArgs.help) {
     console.log(help);
     process.exit(0);
 }
+
+if (parsedArgs.m)
+    message = parsedArgs.m;
 
 if (parsedArgs._.length > 1) {
     console.log("Extra args");
@@ -41,7 +48,7 @@ if (parsedArgs._.length == 1) {
 var ws = new WebSocket(url);
 
 ws.on('open', function open() {
-    ws.send('something');
+    ws.send(message);
 });
 
 ws.on('message', function(data, flags) {
