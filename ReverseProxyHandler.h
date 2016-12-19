@@ -124,4 +124,6 @@ protected:
 
     UpstreamTransactionHandler m_upstreamHandler;
 
+    bool m_upgradedToTcp = false;
+
 };

@@ -47,15 +47,15 @@ if (parsedArgs._.length == 1) {
 
 var ws = new WebSocket(url);
 
-ws.on('open', function open() {
-    ws.send(message);
-});
-
 ws.on('message', function(data, flags) {
     console.log("message arrived ", flags + ", data = ", data);
   // flags.binary will be set if a binary data is received.
   // flags.masked will be set if the data was masked.
-    
+
     ws.close();
 });
 
+ws.on('open', function open() {
+    console.log("Sending ", message);
+    ws.send(message);
+});

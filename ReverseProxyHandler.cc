@@ -201,6 +201,14 @@ void ReverseProxyHandler::upstreamOnEOM() noexcept
 void ReverseProxyHandler::upstreamOnUpgrade(UpgradeProtocol protocol) noexcept
 {
     cout << __PRETTY_FUNCTION__ << endl;
+
+    if (protocol == proxygen::UpgradeProtocol::TCP) {
+
+        ResponseBuilder(downstream_).acceptUpgradeRequest(ResponseBuilder::UpgradeType::HTTP_UPGRADE);
+
+        cout << "upstream upgrade to TCP" << endl;
+        m_upgradedToTcp = true;
+    }
 }
 
 void ReverseProxyHandler::upstreamOnError(const HTTPException& error) noexcept

@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include "ReverseProxyHandlerFactory.h"
+#include "ReverseProxySessionInfoCallback.h"
 
 using namespace proxygen;
 using namespace folly;
@@ -32,6 +33,8 @@ int main(int argc, char *argv[])
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
 
+    ReverseProxySessionInfoCallback sessionInfoCallback;
+
     std::vector<HTTPServer::IPConfig> IPs = {
         {SocketAddress("localhost", FLAGS_http_port, true), Protocol::HTTP}
     };
@@ -45,6 +48,7 @@ int main(int argc, char *argv[])
 
 
     HTTPServer server(std::move(options));
+    server.setSessionInfoCallback(&sessionInfoCallback);
 
     server.bind(IPs);
 
