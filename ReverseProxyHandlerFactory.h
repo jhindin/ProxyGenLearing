@@ -6,6 +6,7 @@
 
 class ReverseProxyHandlerFactory : public proxygen::RequestHandlerFactory {
 public:
+    ReverseProxyHandlerFactory(const std::string &redirectHost, int redirectPort) : m_redirectHost(redirectHost), m_redirectPort(redirectPort) {}
     void onServerStart(folly::EventBase* evb) noexcept override {
         m_evb = evb;
 
@@ -23,7 +24,13 @@ public:
     folly::EventBase *evb() const {  return m_evb; }
     folly::HHWheelTimer *wheelTimer() const { return m_timer.get(); }
 
+    const std::string &redirectHost() const { return m_redirectHost; }
+    int redirectPort() const { return m_redirectPort; }
+
 private:
     folly::EventBase *m_evb = nullptr;
     folly::HHWheelTimer::UniquePtr m_timer;
+
+    std::string m_redirectHost;
+    int m_redirectPort;
 };

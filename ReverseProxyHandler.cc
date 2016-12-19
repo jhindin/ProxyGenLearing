@@ -49,11 +49,7 @@ void ReverseProxyHandler::onRequest(std::unique_ptr<HTTPMessage> message) noexce
     try {
         SocketAddress addr;
 
-        // TODO: port hardcoded for testing!!
-        if (host.find(':') == string::npos)
-            addr.setFromHostPort(host, 8895);
-        else
-            addr.setFromHostPort(host);
+        addr.setFromHostPort(m_factory->redirectHost(), m_factory->redirectPort());
 
         static const AsyncSocket::OptionMap opts{{{SOL_SOCKET, SO_REUSEADDR}, 1}};
 

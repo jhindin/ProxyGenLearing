@@ -24,6 +24,8 @@ using namespace std;
 using Protocol = HTTPServer::Protocol;
 
 DEFINE_int32(http_port, 80, "Port to listen on with HTTP protocol");
+DEFINE_string(redirect_host, "localhost", "Host to redirect");
+DEFINE_int32(redirect_port, 8895, "Port to redirect");
 
 int main(int argc, char *argv[])
 {
@@ -40,7 +42,7 @@ int main(int argc, char *argv[])
 
 
     options.handlerFactories = RequestHandlerChain()
-        .addThen<ReverseProxyHandlerFactory>()
+        .addThen<ReverseProxyHandlerFactory>(FLAGS_redirect_host, FLAGS_redirect_port)
         .build();
 
 
