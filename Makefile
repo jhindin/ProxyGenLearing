@@ -14,7 +14,7 @@ SimpleReverseProxy.SRCS=SimpleReverseProxy.cc ReverseProxyHandler.cc ReverseProx
 
 
 .SECONDEXPANSION:
-${PROGRAMS}: % : $${$$@.SRCS}
+${PROGRAMS}: % : $${$$@.SRCS:.cc=.o}
 	${CXX} ${CXXFLAGS} -o $@ $^ ${LDLIBS}
 
 .PHONY: all
