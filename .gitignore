@@ -4,5 +4,6 @@ MySecondServer
 MyThirdServer
 SimpleReverseProxy
 *~
+*.o
 
 
