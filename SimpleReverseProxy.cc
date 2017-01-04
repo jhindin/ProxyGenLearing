@@ -34,8 +34,7 @@ int main(int argc, char *argv[])
     google::InstallFailureSignalHandler();
 
     std::vector<HTTPServer::IPConfig> IPs = {
-        {SocketAddress("localhost", FLAGS_http_port, true), Protocol::HTTP},
-        {SocketAddress("127.0.0.1", FLAGS_http_port, true), Protocol::HTTP}
+      {SocketAddress(IPAddress::fromLong(INADDR_ANY), FLAGS_http_port), Protocol::HTTP}
     };
 
     HTTPServerOptions options;
